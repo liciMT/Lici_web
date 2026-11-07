@@ -1129,11 +1129,38 @@
   border-radius: var(--radius-lg);
   background: var(--ink);
   color: var(--paper);
-  transition: transform 0.5s var(--ease-spring);
+  /* Same springy "pop & tilt" as the pills (scale/rotate stack with the reveal translate). */
+  /* Smooth (no overshoot): long ease-out so scale, tilt, shadow and colour move together. */
+  transition:
+    scale 0.7s var(--ease-out),
+    rotate 0.7s var(--ease-out),
+    box-shadow 0.7s var(--ease-out),
+    background-color 0.6s var(--ease-out);
+  will-change: scale, rotate;
 }
 
-.lc-work:hover {
-  transform: translateY(-6px);
+@media (hover: hover) {
+  /* Cards are much larger than pills, so the same motion uses a smaller amplitude. */
+  .lc-work:hover {
+    scale: 1.02;
+    rotate: 1deg;
+    background: var(--blue);
+    box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.5);
+  }
+
+  .lc-works__grid > .lc-work:nth-child(even):hover {
+    rotate: -1deg;
+    background: var(--red);
+  }
+
+  .lc-work__info small {
+    transition: color 0.6s var(--ease-out);
+  }
+
+  /* Keep the small caption readable on blue/red (white 4.6:1+). */
+  .lc-work:hover .lc-work__info small {
+    color: var(--on-red);
+  }
 }
 
 .lc-work__media {
@@ -1224,8 +1251,8 @@
   font-size: 14px;
   font-weight: 600;
   transition:
-    background-color 0.25s ease,
-    color 0.25s ease;
+    background-color 0.6s var(--ease-out),
+    color 0.6s var(--ease-out);
 }
 
 .lc-work:hover .lc-work__cta {
@@ -2306,15 +2333,40 @@ a.lc-svc:hover {
     gap: 24px;
   }
 
+  /* Tablet / phone: video spans the full content width, and the word list is sized
+     so its longest word ("Motion design") matches that width - capped by
+     viewport height so the whole sticky stage always fits on screen. */
   .lc-story__media {
     order: -1;
-    width: min(62vw, 300px);
-    aspect-ratio: 4 / 3.4;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    max-height: 32svh;
+    border-radius: var(--radius);
   }
 
   .lc-story__words li {
-    font-size: clamp(32px, 9vw, 56px);
+    /* 6.3em = width of "Motion design" when bold (active); regular weight lands at ~92 %. */
+    font-size: min(calc((100vw - 2 * var(--gutter)) / 6.3), 7svh);
     line-height: 1.04;
+  }
+
+  .lc-story__words li.is-active {
+    transform: none;
+  }
+
+  /* Tablet (taller screens): trade a little video height for bigger words. */
+  @media (min-width: 601px) {
+    .lc-story__body {
+      gap: 20px;
+    }
+
+    .lc-story__media {
+      max-height: 26svh;
+    }
+
+    .lc-story__words li {
+      font-size: min(calc((100vw - 2 * var(--gutter)) / 6.3), 8.4svh);
+    }
   }
 
   .lc-story__intro {
@@ -3298,4 +3350,32 @@ a.lc-svc:hover {
     background: var(--ink);
     color: var(--paper);
   }
+}
+
+/* =========================================================================
+   Cards that are also scroll-reveal targets: the reveal rule
+   (.rv-ready [data-rv] { transition: opacity, translate }) is more specific
+   than the card's own `transition` and was silently dropping the hover
+   transitions, so hover snapped instantly. Re-declare both sets together;
+   the reveal delay (--d) applies only to opacity/translate.
+   ========================================================================= */
+.rv-ready .lc-work[data-rv],
+.rv-ready .lc-perk[data-rv],
+.rv-ready .lc-feat[data-rv] {
+  transition:
+    opacity 0.8s var(--ease-out) var(--d, 0ms),
+    translate 0.8s var(--ease-out) var(--d, 0ms),
+    scale 0.7s var(--ease-out),
+    rotate 0.7s var(--ease-out),
+    transform 0.7s var(--ease-out),
+    box-shadow 0.7s var(--ease-out),
+    background-color 0.6s var(--ease-out);
+}
+
+/* Same smooth curve for the non-revealed state (no JS / reduced motion handled globally). */
+.lc-perk,
+.lc-feat {
+  transition:
+    transform 0.7s var(--ease-out),
+    box-shadow 0.7s var(--ease-out);
 }
