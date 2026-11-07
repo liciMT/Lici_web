@@ -2,15 +2,19 @@ export const A = (path: string) => `/sites/liciad/${path}`;
 
 export const SOURCE = "https://www.liciad.com";
 
-export const navItems = [
-  { label: "Úvod", href: "/", active: true },
-  { label: "Služby", href: `${SOURCE}/services/` },
-  { label: "Práce", href: `${SOURCE}/works/` },
-  { label: "Kariéra", href: `${SOURCE}/career/` },
-  { label: "Blog", href: `${SOURCE}/blog/` },
+export type NavKey = "home" | "kariera" | "blog";
+
+export const navItems: { label: string; href: string; key?: NavKey }[] = [
+  { label: "Práce", href: "/#prace" },
+  { label: "Služby", href: "/#sluzby" },
+  { label: "Tím", href: "/#tim" },
+  { label: "Kariéra", href: "/kariera", key: "kariera" },
+  { label: "Blog", href: "/blog", key: "blog" },
 ];
 
 export const contactHref = `${SOURCE}/contact/`;
+export const email = "office@liciad.com";
+export const phone = "+421 918 498 500";
 
 export const heroSlides = [
   { word: "Advertising", desktop: "2023/12/01-Advertising.mp4", mobile: "2023/12/98a0-4a70-bc8a-9e0f9b873279.mp4" },
@@ -120,24 +124,28 @@ export const reviews = [
     name: "Klaudia H.",
     position: "Franchise Marketing Specialist",
     logo: "2024/01/MO.png",
+    brand: "Môjobchod",
   },
   {
     text: "\"Spoluprácu hodnotím na vysokej úrovni. Perfektné navnímanie a obľúbenie si nášho produktu sa prejavilo v prepracovaných príspevkoch na sociálnych sieťach a v propagačných materiáloch, čo podporilo našu značku a predaj.\"",
     name: "Peter H.",
     position: "Marketingový manažér spoločnosti Premac",
     logo: "2024/02/premac_logo.png",
+    brand: "Premac",
   },
   {
     text: "\"Vždy kreatívni, vždy jedineční a iní. Chválim nielen profesionálnu stránku, ale aj ľudský prístup a nekonečnú ochotu vyjsť zadávateľovi v ústrety za akýchkoľvek okolností. Veľká spokojnosť!\"",
     name: "Barbora B.",
     position: "Event manažér SLOVNAFT",
     logo: "2024/01/Slovnaft.png",
+    brand: "Slovnaft",
   },
   {
     text: "\"S agenturou Liči spolupracuji již 4 roky a za tu dobu jsme společně připravili spoustu inovativních projektů, které pomohly značku Alpro dostat do popředí. Mimo jejich kreativní nápady, oceňuji zejména osobní přístup a skvělou schopnost se přizpůsobit jakýmkoliv našim požadavkům. Spolupráci si opravdu užívám a vřele doporučuji.\"",
     name: "Barbora H.",
     position: "Brand Manager | Alpro CZ&SK",
     logo: "2024/01/ALRPO.png",
+    brand: "Alpro",
   },
 ];
 
@@ -210,11 +218,57 @@ export const works: Work[] = [
 ];
 
 export const gang = [
-  { href: "https://www.instagram.com/p/C19gMwJKrNm/", video: "2024/01/mtg_dominik-2_short.mp4", poster: "2024/01/videoframe_426.png" },
-  { href: "https://www.instagram.com/p/CwP0ktwqpqE/", video: "2024/01/mtg_manuel-2-short.mp4", poster: "2024/01/videoframe_153.png" },
-  { href: "https://www.instagram.com/licisk/", video: "2024/01/mtg_laura_short.mp4", poster: "2024/01/videoframe_1089.png" },
-  { href: "https://www.instagram.com/p/CnPLMNIBMS-/", video: "2024/01/mtg_monika_short.mp4", poster: "2024/01/videoframe_1544.png" },
-  { href: "https://www.instagram.com/p/Ci2KvL0KqO7/", video: "2024/01/mtg_kika_short.mp4", poster: "2024/01/videoframe_2814.png" },
+  { name: "Dominik", href: "https://www.instagram.com/p/C19gMwJKrNm/", video: "2024/01/mtg_dominik-2_short.mp4", poster: "2024/01/videoframe_426.png" },
+  { name: "Manuel", href: "https://www.instagram.com/p/CwP0ktwqpqE/", video: "2024/01/mtg_manuel-2-short.mp4", poster: "2024/01/videoframe_153.png" },
+  { name: "Laura", href: "https://www.instagram.com/licisk/", video: "2024/01/mtg_laura_short.mp4", poster: "2024/01/videoframe_1089.png" },
+  { name: "Monika", href: "https://www.instagram.com/p/CnPLMNIBMS-/", video: "2024/01/mtg_monika_short.mp4", poster: "2024/01/videoframe_1544.png" },
+  { name: "Kika", href: "https://www.instagram.com/p/Ci2KvL0KqO7/", video: "2024/01/mtg_kika_short.mp4", poster: "2024/01/videoframe_2814.png" },
+];
+
+/** Small round portraits reused in avatar clusters (hero, services, CTA). */
+export const avatars = gang.map((g) => ({ src: g.poster, name: g.name }));
+
+export const marqueeServices = [
+  "Corporate identity",
+  "Kreatívna stratégia",
+  "Digital",
+  "Web design",
+  "Foto a video produkcia",
+  "3D vizuály",
+  "Print",
+  "Marketingové riešenia",
+];
+
+export const marqueeValues = [
+  "We take it personally",
+  "Fullservis pod jednou strechou",
+  "10+ rokov na trhu",
+  "Vlastný ateliér",
+  "80+ vyhraných tendrov",
+  "Kreativita s výsledkami",
+];
+
+export const process = [
+  {
+    step: "01",
+    title: "Spoznáme sa",
+    text: "Počúvame, pýtame sa a spolu definujeme, ako vyzerá úspech pre vašu značku.",
+  },
+  {
+    step: "02",
+    title: "Stratégia",
+    text: "Z poznatkov vytvoríme jasný smer, priority a kreatívne zadanie.",
+  },
+  {
+    step: "03",
+    title: "Tvoríme",
+    text: "Navrhujeme, natáčame a ladíme detaily, kým to nie je nezameniteľne vaše.",
+  },
+  {
+    step: "04",
+    title: "Spúšťame",
+    text: "Kampaň uvedieme do sveta, meriame výsledky a ďalej optimalizujeme.",
+  },
 ];
 
 export const instagram = [
@@ -233,14 +287,128 @@ export const instagram = [
 ].map(([id, href, type]) => ({ src: `instagram/${id}full.jpg`, href, type }));
 
 export const footerLinks = [
-  { label: "Úvod", href: "/", active: true },
-  { label: "Služby", href: `${SOURCE}/services/` },
-  { label: "Práce", href: `${SOURCE}/works/` },
-  { label: "Kariéra", href: `${SOURCE}/career/` },
-  { label: "Blog", href: `${SOURCE}/blog/` },
+  { label: "Úvod", href: "/" },
+  { label: "Práce", href: "/#prace" },
+  { label: "Služby", href: "/#sluzby" },
+  { label: "Kariéra", href: "/kariera" },
+  { label: "Blog", href: "/blog" },
 ];
 
 export const legalLinks = [
   { label: "Zásady používania súborov cookie (EÚ)", href: `${SOURCE}/cookie-policy/` },
   { label: "Vyhlásenie o ochrane osobných údajov (EÚ)", href: `${SOURCE}/data-protection/` },
+];
+
+export type BlogPost = {
+  title: string;
+  excerpt: string;
+  date: string;
+  author: string;
+  categories: string[];
+  image: string;
+  href: string;
+};
+
+export const blogCategories = ["Online marketing", "Tvorba obsahu"];
+
+export const blogPosts: BlogPost[] = [
+  {
+    title: "Snažíte sa tvoriť obsah na TikTok čo najkratšou formou? Dnes už je to chyba!",
+    excerpt: "Ak ste sa doposiaľ sústredili na to, ako postrihať video na TikTok do čo najkratšej podoby, tak vás zrejme aktuálne prekvapí, čo dnes funguje.",
+    date: "13. júna 2025",
+    author: "Monika Dimitrovičová",
+    categories: ["Online marketing"],
+    image: "blog/Snazite-sa-tvorit-obsah-na-TikTok-co-najkratsou-formou.jpg",
+    href: `${SOURCE}/snazite-sa-tvorit-obsah-na-tiktok-co-najkratsou-formou-dnes-uz-je-to-chyba/`,
+  },
+  {
+    title: "Ako tvoriť obsah na sociálnych sieťach v roku 2025?",
+    excerpt: "Sociálne siete sa neustále menia a to, čo fungovalo pred rokom, dnes už nemusí byť efektívne. Ak chcete zaujať svoje publikum, čítajte ďalej.",
+    date: "18. februára 2025",
+    author: "Veronika Kúdelová",
+    categories: ["Online marketing"],
+    image: "blog/Marketing_Trends_2025__-1.jpg",
+    href: `${SOURCE}/ako-tvorit-obsah-na-socialnych-sietach-v-roku-2025/`,
+  },
+  {
+    title: "Aké marketingové zmeny nás čakajú v roku 2025?",
+    excerpt: "Transparentnosť, autenticita a dôveryhodnosť sú kľúčové prvky, ktoré v dobe plnej dezinformácií a rýchlych zmien vyhľadáva snáď každý.",
+    date: "30. januára 2025",
+    author: "Veronika Kúdelová",
+    categories: ["Online marketing"],
+    image: "blog/Marketing_Trends_2025-1.jpg",
+    href: `${SOURCE}/ake-marketingove-zmeny-nas-cakaju-v-roku-2025/`,
+  },
+  {
+    title: "Instagram v kocke - Najväčšie zmeny za rok 2024",
+    excerpt: "Instagram v roku 2024 pokračoval s významnými zmenami v algoritmoch a optimalizáciou pre video obsah. Na čo sa zameriavajú algoritmy?",
+    date: "29. novembra 2024",
+    author: "Veronika Kúdelová",
+    categories: ["Tvorba obsahu", "Online marketing"],
+    image: "blog/Instagram_v_kocke.jpg",
+    href: `${SOURCE}/instagram-v-kocke-najvacsie-zmeny-za-rok-2024/`,
+  },
+  {
+    title: "Aký vplyv má Gen Z na trendy v digitálnom marketingu?",
+    excerpt: "Druhá najmladšia generácia medzi mileniálmi a generáciou Alpha je poznačená nielen digitálnou érou, ale aj klimatickými zmenami.",
+    date: "18. októbra 2024",
+    author: "Veronika Kúdelová",
+    categories: ["Online marketing"],
+    image: "blog/GenZ_v_marketingu-1.jpg",
+    href: `${SOURCE}/aky-vplyv-ma-gen-z-na-trendy-v-digitalnom-marketingu/`,
+  },
+  {
+    title: "Platené TikTok reklamy na Slovensku: Aké príležitosti prinášajú?",
+    excerpt: "Sociálna sieť TikTok sa každým dňom stáva populárnejšou. Od spustenia v roku 2017 zaznamenala obrovský nárast používateľov.",
+    date: "19. septembra 2024",
+    author: "Veronika Kúdelová",
+    categories: ["Online marketing"],
+    image: "blog/LICI_TikTok_Ads_v_cislach_thumbnail.jpg",
+    href: `${SOURCE}/pozerame-sa-na-tik-tok-ads-v-cislach-co-nam-prinesu/`,
+  },
+  {
+    title: "Nová sociálna sieť Threads - Rekordman v počte stiahnutí je dostupný už aj na Slovensku!",
+    excerpt: "Threads poskytuje používateľom textové informácie, podobne ako Twitter. Zameriava sa však primárne na vytváranie verejných konverzácií.",
+    date: "16. januára 2024",
+    author: "Monika Dimitrovičová",
+    categories: ["Online marketing"],
+    image: "blog/lici_nova_socialna_siet_threads_blog.webp",
+    href: `${SOURCE}/nova-socialna-siet-threads/`,
+  },
+  {
+    title: "Tvorba marketingových prezentácií: Pravidlá a kľúčové kroky",
+    excerpt: "Úspech spočíva nielen v kvalite ponúkaných služieb, ale aj v efektívnom oslovení a presvedčení klienta. Ako na to systematicky?",
+    date: "15. januára 2024",
+    author: "Monika Dimitrovičová",
+    categories: ["Online marketing"],
+    image: "blog/lici_tvorba_marketingovych_prezentacii_blog.png",
+    href: `${SOURCE}/tvorba-marketingovych-prezentacii/`,
+  },
+  {
+    title: "Mikroinfluenceri: Kľúč k úspešným brandovým a predajným kampaniam",
+    excerpt: "Svet digitálnej marketingovej komunikácie sa začal mimoriadne rýchlo meniť už v roku 2023 s nástupom AI automatizácie.",
+    date: "15. januára 2024",
+    author: "Monika Dimitrovičová",
+    categories: ["Online marketing"],
+    image: "blog/lici_Mikroinfluenceri_blog.webp",
+    href: `${SOURCE}/mikroinfluenceri-kluc-k-uspesnych-brandovym-a-predajnym-kampaniam/`,
+  },
+  {
+    title: "Podpora brandu s rešpektom ku kultúrnym presahom v roku 2024",
+    excerpt: "S rýchlym vývojom digitálnej éry a posunom spotrebiteľských preferencií prináša rok 2024 nové výzvy aj príležitosti.",
+    date: "15. januára 2024",
+    author: "Monika Dimitrovičová",
+    categories: ["Online marketing"],
+    image: "blog/lici_marketingove_trendy_blog-1.webp",
+    href: `${SOURCE}/podpora-brandu-s-respektom-ku-kulturnym-preshaom-v-roku-2024/`,
+  },
+  {
+    title: "Ako budú vyzerať marketingové trendy v roku 2024?",
+    excerpt: "Výrazný pokrok pri možnostiach využitia AI zásadne ovplyvnil nielen marketingové trendy, ale aj spôsob myslenia a tvorby.",
+    date: "31. decembra 2023",
+    author: "Monika Dimitrovičová",
+    categories: ["Online marketing"],
+    image: "blog/lici_marketingove_trendy_blog-1.png",
+    href: `${SOURCE}/marketingove-trendy-2024/`,
+  },
 ];
