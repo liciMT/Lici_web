@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "liciad-clone",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "liciad-clone", "run", "dev", "--", "-p", "3210"],
+      "port": 3210
+    }
+  ]
+}
