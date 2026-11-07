@@ -2333,15 +2333,40 @@ a.lc-svc:hover {
     gap: 24px;
   }
 
+  /* Tablet / phone: video spans the full content width, and the word list is sized
+     so its longest word ("Motion design") matches that width - capped by
+     viewport height so the whole sticky stage always fits on screen. */
   .lc-story__media {
     order: -1;
-    width: min(62vw, 300px);
-    aspect-ratio: 4 / 3.4;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    max-height: 32svh;
+    border-radius: var(--radius);
   }
 
   .lc-story__words li {
-    font-size: clamp(32px, 9vw, 56px);
+    /* 6.3em = width of "Motion design" when bold (active); regular weight lands at ~92 %. */
+    font-size: min(calc((100vw - 2 * var(--gutter)) / 6.3), 7svh);
     line-height: 1.04;
+  }
+
+  .lc-story__words li.is-active {
+    transform: none;
+  }
+
+  /* Tablet (taller screens): trade a little video height for bigger words. */
+  @media (min-width: 601px) {
+    .lc-story__body {
+      gap: 20px;
+    }
+
+    .lc-story__media {
+      max-height: 26svh;
+    }
+
+    .lc-story__words li {
+      font-size: min(calc((100vw - 2 * var(--gutter)) / 6.3), 8.4svh);
+    }
   }
 
   .lc-story__intro {
