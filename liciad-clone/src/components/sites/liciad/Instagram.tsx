@@ -1,81 +1,37 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import { A, instagram } from "./data";
-
-const DELAY = 2500;
-
-function useColumns() {
-  const [cols, setCols] = useState(6);
-  useEffect(() => {
-    const calc = () => setCols(window.innerWidth <= 1024 ? 2 : 6);
-    calc();
-    window.addEventListener("resize", calc);
-    return () => window.removeEventListener("resize", calc);
-  }, []);
-  return cols;
-}
+import { Btn } from "./ui";
 
 export function Instagram() {
-  const cols = useColumns();
-  const pages = Math.ceil(instagram.length / cols);
-  const [page, setPage] = useState(0);
-  const current = Math.min(page, pages - 1);
-
-  useEffect(() => {
-    const t = setInterval(() => setPage((p) => (p + 1) % pages), DELAY);
-    return () => clearInterval(t);
-  }, [pages]);
-
   return (
-    <section className="lc-insta">
-      <h6 className="lc-insta__title">
-        <a href="https://www.instagram.com/licisk/">Sleduj náš Instagram @licisk</a>
-      </h6>
-      <div className="lc-insta__feed">
-        <div style={{ overflow: "hidden" }}>
-          <div
-            style={{
-              display: "flex",
-              transform: `translateX(-${current * 100}%)`,
-              transition: "transform 0.6s ease",
-            }}
-          >
-            {instagram.map((item) => (
-              <a
-                key={item.src}
-                href={item.href}
-                className="lc-insta__item"
-                style={{ flex: `0 0 ${100 / cols}%` }}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+    <section className="lc-insta" aria-labelledby="lc-insta-title">
+      <div className="lc-wrap">
+        <header className="lc-head" data-rv>
+          <div>
+            <h2 id="lc-insta-title" className="lc-h2">
+              Zo zákulisia <mark className="lc-hl lc-hl--blue">@licisk</mark>
+            </h2>
+          </div>
+          <Btn href="https://www.instagram.com/licisk/" variant="ghost" external>
+            Sledovať nás
+          </Btn>
+        </header>
+        <ul className="lc-insta__grid">
+          {instagram.slice(0, 12).map((p, i) => (
+            <li key={p.src} data-rv style={{ ["--d" as string]: `${(i % 6) * 50}ms` }}>
+              <a href={p.href} target="_blank" rel="noopener noreferrer" aria-label={`Príspevok na Instagrame ${i + 1}`}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className="lc-insta__frame" src={A("2024/01/ig_before.png")} alt="" />
-                <span className="lc-insta__photo" style={{ backgroundImage: `url(${A(item.src)})` }}>
-                  {item.type === "video" && (
-                    <svg className="lc-insta__play" viewBox="0 0 24 24" aria-hidden="true">
+                <img src={A(p.src)} alt="" loading="lazy" />
+                {p.type === "video" && (
+                  <span className="lc-insta__type" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
                       <path d="M8 5v14l11-7z" />
                     </svg>
-                  )}
-                </span>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className="lc-insta__frame" src={A("2024/01/ig_after.png")} alt="" />
+                  </span>
+                )}
               </a>
-            ))}
-          </div>
-        </div>
-        <div className="lc-insta__dots">
-          {Array.from({ length: pages }, (_, i) => (
-            <button
-              key={i}
-              type="button"
-              className={`lc-insta__dot${i === current ? " is-active" : ""}`}
-              aria-label={`Strana ${i + 1}`}
-              onClick={() => setPage(i)}
-            />
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   );

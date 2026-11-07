@@ -1,32 +1,26 @@
-import "swiper/css";
-import "swiper/css/effect-coverflow";
-import "@/components/sites/liciad/liciad.css";
-import { Header } from "@/components/sites/liciad/Header";
+import { Shell } from "@/components/sites/liciad/Shell";
 import { Hero } from "@/components/sites/liciad/Hero";
-import { Disciplines } from "@/components/sites/liciad/Disciplines";
-import { Reviews } from "@/components/sites/liciad/Reviews";
+import { Story } from "@/components/sites/liciad/Story";
 import { Works } from "@/components/sites/liciad/Works";
-import { Values } from "@/components/sites/liciad/Values";
-import { MeetTheGang } from "@/components/sites/liciad/MeetTheGang";
-import { About } from "@/components/sites/liciad/About";
+import { Services } from "@/components/sites/liciad/Services";
+import { Process } from "@/components/sites/liciad/Process";
+import { Team } from "@/components/sites/liciad/Team";
+import { Reviews } from "@/components/sites/liciad/Reviews";
 import { Instagram } from "@/components/sites/liciad/Instagram";
-import { Footer } from "@/components/sites/liciad/Footer";
+import { Cta } from "@/components/sites/liciad/Cta";
 
 export default function Home() {
   return (
-    <div className="lc">
-      <Header />
-      <main>
-        <Hero />
-        <Disciplines />
-        <Reviews />
-        <Works />
-        <Values />
-        <MeetTheGang />
-        <About />
-        <Instagram />
-      </main>
-      <Footer />
-    </div>
+    <Shell current="home">
+      <Hero />
+      <Story />
+      <Works />
+      <Services />
+      <Process />
+      <Team />
+      <Reviews />
+      <Instagram />
+      <Cta />
+    </Shell>
   );
 }

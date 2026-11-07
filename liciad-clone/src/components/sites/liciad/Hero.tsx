@@ -1,79 +1,99 @@
-"use client";
+import { A, contactHref, works } from "./data";
+import { Avatars, Btn, CMark } from "./ui";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import { A, heroSlides } from "./data";
-
-const DELAY = 5000;
+const stack = [works[4], works[1], works[0]]; // back → front
 
 export function Hero() {
-  const [index, setIndex] = useState(0);
-  const timer = useRef<ReturnType<typeof setInterval> | null>(null);
-  const count = heroSlides.length;
-
-  const restart = useCallback(() => {
-    if (timer.current) clearInterval(timer.current);
-    timer.current = setInterval(() => setIndex((i) => (i + 1) % count), DELAY);
-  }, [count]);
-
-  useEffect(() => {
-    restart();
-    return () => {
-      if (timer.current) clearInterval(timer.current);
-    };
-  }, [restart]);
-
-  const go = (dir: number) => {
-    setIndex((i) => (i + dir + count) % count);
-    restart();
-  };
-
   return (
-    <section className="lc-hero" aria-label="Úvod">
-      {heroSlides.map((slide, i) => (
-        <div key={slide.word} className={`lc-hero__slide${i === index ? " is-active" : ""}`} aria-hidden={i !== index}>
-          <video className="lc-hero__video lc-hero__video--desktop" src={A(slide.desktop)} autoPlay muted loop playsInline />
-          <video className="lc-hero__video lc-hero__video--mobile" src={A(slide.mobile)} autoPlay muted loop playsInline />
+    <section className="lc-hero" id="top" aria-labelledby="lc-hero-title">
+      <div className="lc-gridlines" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
+      <div className="lc-wrap">
+        <div className="lc-hero__meta" data-rv>
+          <span className="lc-hero__status">
+            <i aria-hidden="true" />
+            Prijímame nové projekty na rok 2027
+          </span>
         </div>
-      ))}
-      <div className="lc-hero__overlay">
-        <div className="lc-hero__content">
-          <div className="lc-hero__row1">We take</div>
-          <div className="lc-hero__row2">personally</div>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className="lc-hero__line" src={A("2023/12/hero-line.png")} alt="" />
-        </div>
-        <div className="lc-hero__words">
-          {heroSlides.map((slide, i) => (
-            <h1 key={slide.word} className={`lc-hero__word${i === index ? " is-active" : ""}`} aria-hidden={i !== index}>
-              {slide.word}
+
+        <div className="lc-hero__grid">
+          <div className="lc-hero__copy">
+            <h1 id="lc-hero-title" className="lc-hero__title" data-rv style={{ ["--d" as string]: "80ms" }}>
+              <span className="lc-line">
+                Reklamu berieme <mark className="lc-hl lc-hl--teal">osobne</mark>
+              </span>{" "}
+              <span className="lc-line">
+                <Avatars count={3} size="lg" /> a tvoríme
+              </span>{" "}
+              <span className="lc-line">
+                značky, <span className="lc-hl-dots" aria-hidden="true"><i /><i /><i /></span> ktoré
+              </span>{" "}
+              <span className="lc-line">
+                <mark className="lc-hl lc-hl--red">rastú.</mark>
+              </span>
             </h1>
-          ))}
-        </div>
-        <div className="lc-hero__bottom">
-          <p className="lc-hero__desc">
-            Sme fullservisová reklamná agentúra, ktorá pomáha značkám rásť prostredníctvom inovatívnych stratégií.
-          </p>
-          <div className="lc-hero__nav">
-            <button
-              type="button"
-              className="lc-hero__arrow"
-              style={{ backgroundImage: `url(${A("icons/arrow_right.svg")})` }}
-              aria-label="Predošlé"
-              onClick={() => go(-1)}
-            />
-            <div className="lc-hero__count">
-              {index + 1} / {count}
+            <p className="lc-hero__lead" data-rv style={{ ["--d" as string]: "180ms" }}>
+              Sme fullservisová reklamná agentúra s viac ako 10-ročnými skúsenosťami. Od prvej myšlienky po
+              finálnu kampaň prinášame stratégiu, charakter a remeslo do každého detailu.
+            </p>
+            <div className="lc-hero__actions" data-rv style={{ ["--d" as string]: "260ms" }}>
+              <Btn href="#prace">Pozrieť naše práce</Btn>
+              <Btn href={contactHref} variant="teal">
+                Začať projekt
+              </Btn>
             </div>
-            <button
-              type="button"
-              className="lc-hero__arrow"
-              style={{ backgroundImage: `url(${A("icons/arrow_left.svg")})` }}
-              aria-label="Ďalšie"
-              onClick={() => go(1)}
-            />
+          </div>
+
+          <div className="lc-hero__stack" data-rv style={{ ["--d" as string]: "200ms" }}>
+            {stack.map((w, i) => (
+              <a
+                key={w.href}
+                href={w.href}
+                className={`lc-hero__card lc-hero__card--${i}`}
+                tabIndex={i === 2 ? 0 : -1}
+                aria-hidden={i !== 2 || undefined}
+                aria-label={i === 2 ? `${w.name} - ${w.excerpt}` : undefined}
+              >
+                {w.video ? (
+                  <video src={A(w.video)} poster={w.poster ? A(w.poster) : undefined} autoPlay muted loop playsInline preload="metadata" />
+                ) : (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={A(w.image!)} alt="" />
+                )}
+                {i === 2 && (
+                  <span className="lc-hero__caption">
+                    <span>
+                      <strong>{w.name}</strong>
+                      <small>{w.excerpt}</small>
+                    </span>
+                    <span className="lc-tag lc-tag--red">Featured</span>
+                  </span>
+                )}
+              </a>
+            ))}
+            <RotatingBadge />
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+function RotatingBadge() {
+  return (
+    <span className="lc-badge" aria-hidden="true">
+      <svg viewBox="0 0 120 120">
+        <defs>
+          <path id="lc-badge-path" d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1-92 0" />
+        </defs>
+        <text>
+          <textPath href="#lc-badge-path" textLength="286" lengthAdjust="spacing">WE TAKE IT PERSONALLY • LIČI AD • </textPath>
+        </text>
+      </svg>
+      <CMark className="lc-badge__core" />
+    </span>
   );
 }
