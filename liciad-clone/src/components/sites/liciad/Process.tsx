@@ -1,4 +1,5 @@
 import { A, process, teamPhotos } from "./data";
+import { Swash } from "./Chips";
 import { CMark } from "./ui";
 
 export function Process() {
@@ -11,7 +12,7 @@ export function Process() {
         <header className="lc-process__head" data-rv>
           <CMark className="lc-process__star" />
           <h2 id="lc-process-title" className="lc-h2">
-            Sústredený proces postavený na spolupráci a tempe.
+            Sústredený proces postavený na spolupráci a <Swash tone="red">tempe.</Swash>
           </h2>
           <p>Otvorene a zrozumiteľne - vždy budete vedieť, čo riešime, prečo dáva smer zmysel a čo príde ďalej.</p>
         </header>

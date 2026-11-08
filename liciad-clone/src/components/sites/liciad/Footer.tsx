@@ -1,4 +1,5 @@
 import { contactHref, email, footerLinks, legalLinks, phone } from "./data";
+import { FooterFall } from "./FooterFall";
 import { Logo, LogoMark } from "./ui";
 
 const social = [
@@ -71,10 +72,15 @@ export function Footer() {
           </ul>
         </div>
         <div className="lc-footer__giant" aria-hidden="true">
-          <LogoMark className="lc-footer__word" />
-          <span className="lc-tag lc-tag--teal lc-footer__chip lc-footer__chip--1">Kreatívna stratégia</span>
-          <span className="lc-tag lc-tag--red lc-footer__chip lc-footer__chip--2">Foto a video</span>
-          <span className="lc-tag lc-tag--teal lc-footer__chip lc-footer__chip--3">Digital</span>
+          <div className="lc-footer__logo">
+            <LogoMark className="lc-footer__word" />
+          </div>
+          <FooterFall className="lc-footer__fall" />
+          <div className="lc-footer__chips">
+            <span className="lc-tag lc-tag--teal lc-footer__chip lc-footer__chip--1">Kreatívna stratégia</span>
+            <span className="lc-tag lc-tag--red lc-footer__chip lc-footer__chip--2">Foto a video</span>
+            <span className="lc-tag lc-tag--teal lc-footer__chip lc-footer__chip--3">Digital</span>
+          </div>
         </div>
       </div>
     </footer>

@@ -4,6 +4,7 @@ import { Story } from "@/components/sites/liciad/Story";
 import { Works } from "@/components/sites/liciad/Works";
 import { Services } from "@/components/sites/liciad/Services";
 import { Process } from "@/components/sites/liciad/Process";
+import { Talk } from "@/components/sites/liciad/Talk";
 import { Team } from "@/components/sites/liciad/Team";
 import { Reviews } from "@/components/sites/liciad/Reviews";
 import { Instagram } from "@/components/sites/liciad/Instagram";
@@ -17,6 +18,7 @@ export default function Home() {
       <Works />
       <Services />
       <Process />
+      <Talk />
       <Team />
       <Reviews />
       <Instagram />

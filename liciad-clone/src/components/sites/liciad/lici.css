@@ -2135,16 +2135,26 @@ a.lc-svc:hover {
   color: var(--teal);
 }
 
-/* Giant wordmark: 90 % of the viewport width, anchored to the page bottom and
-   cropped slightly from below (container shows ~86 % of the logo height). */
+/* Giant row (90 % of the viewport): wordmark with service chips on the left,
+   the falling-lychee animation on the right. Everything sits on the page
+   bottom; the wordmark is cropped slightly from below (~86 % visible). */
 .lc-footer__giant {
-  position: relative;
+  display: grid;
+  grid-template-columns: 56fr 30fr;
+  justify-content: space-between;
+  align-items: end;
+  gap: 4vw;
   width: 90vw;
-  height: calc(90vw * 204 / 348 * 0.86);
-  margin-top: clamp(40px, 6vw, 80px);
+  margin-top: clamp(24px, 4vw, 56px);
   margin-left: 50%;
-  overflow: hidden;
   transform: translateX(-50%);
+}
+
+.lc-footer__logo {
+  grid-column: 1;
+  grid-row: 1;
+  aspect-ratio: 348 / 175.4; /* 86 % of the 348 x 204 mark */
+  overflow: hidden;
 }
 
 .lc-footer__word {
@@ -2154,12 +2164,44 @@ a.lc-svc:hover {
   color: var(--paper);
 }
 
+/* The pile rests on the same baseline as the cropped wordmark. */
+.lc-fall {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: end;
+  width: min(100%, 30vw);
+  position: relative;
+  aspect-ratio: 524 / 748;
+  margin-bottom: -2px;
+  pointer-events: none;
+}
+
+.lc-fall video,
+.lc-fall img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Chips float over the wordmark (same grid cell). */
+.lc-footer__chips {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: end;
+  aspect-ratio: 348 / 175.4;
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+
 .lc-footer__chip {
   position: absolute;
-  z-index: 1;
   padding: 0.6em 1.2em;
-  font-size: clamp(12px, 1.5vw, 22px);
+  font-size: clamp(11px, 1.4vw, 22px);
+  white-space: nowrap;
   box-shadow: 0 12px 30px -12px rgb(0 0 0 / 0.6);
+  pointer-events: auto;
 }
 
 .lc-footer__chip--1 {
@@ -2178,6 +2220,17 @@ a.lc-svc:hover {
   right: 3%;
   top: 52%;
   transform: rotate(-6deg);
+}
+
+@media (max-width: 760px) {
+  .lc-footer__giant {
+    grid-template-columns: 60fr 34fr;
+    gap: 3vw;
+  }
+
+  .lc-fall {
+    width: 100%;
+  }
 }
 
 .lc-footer__bottom {
@@ -3456,4 +3509,292 @@ html.lc-loading {
   background: var(--red);
   transform-origin: 0 50%;
   pointer-events: none;
+}
+
+/* =========================================================================
+   Social-kit elements on the web: UI chips, swash underline, Talk chapter
+   ========================================================================= */
+.lc-chip {
+  display: inline-flex;
+  font-size: clamp(15px, 1.3vw, 19px);
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.lc-chip__in {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.62em 1.05em;
+  border-radius: 999px;
+  background: var(--chip-bg);
+  color: var(--chip-fg);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.14);
+}
+
+.lc-chip svg {
+  font-size: 1.15em;
+}
+
+.lc-chip--red { --chip-bg: var(--red); --chip-fg: var(--paper); }
+.lc-chip--teal { --chip-bg: var(--teal); --chip-fg: var(--ink); }
+.lc-chip--paper { --chip-bg: var(--paper); --chip-fg: var(--ink); }
+.lc-chip--ink { --chip-bg: var(--ink); --chip-fg: var(--paper); }
+
+.lc-chip--tail .lc-chip__in::after {
+  content: "";
+  position: absolute;
+  left: 16px;
+  bottom: -9px;
+  width: 18px;
+  height: 14px;
+  background: var(--chip-bg);
+  clip-path: polygon(0 0, 100% 0, 10% 100%);
+}
+
+.lc-hero__chip {
+  position: absolute;
+  z-index: 5;
+}
+
+.lc-hero__chip--like {
+  top: 9%;
+  left: 6%;
+}
+
+.lc-hero__chip--save {
+  right: 2%;
+  bottom: 22%;
+}
+
+.lc-swash {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.lc-swash svg {
+  position: absolute;
+  left: -2%;
+  bottom: -0.2em;
+  width: 104%;
+  height: 0.32em;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.lc-swash path {
+  fill: none;
+  stroke: var(--teal);
+  stroke-width: 9;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.lc-swash--red path { stroke: var(--red); }
+.lc-swash--paper path { stroke: var(--paper); }
+
+/* Talk: blue chapter with draggable pills + self-typing DM thread */
+.lc-talk {
+  padding: 120px 0;
+  background: var(--blue);
+  color: var(--paper);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+
+.lc-talk__grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: clamp(32px, 6vw, 96px);
+  align-items: center;
+}
+
+.lc-talk__copy {
+  display: grid;
+  justify-items: start;
+  gap: 24px;
+}
+
+.lc-talk__copy > p {
+  max-width: 52ch;
+  margin: 0;
+  color: var(--paper-72);
+}
+
+.lc-talk__cloud {
+  position: relative;
+  width: 100%;
+  height: clamp(260px, 26vw, 340px);
+  margin-top: 8px;
+}
+
+.lc-talk__pill {
+  position: absolute;
+  padding: 0.42em 0.95em 0.5em;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  font-size: clamp(20px, 2.2vw, 32px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.lc-talk__pill--outline { border-color: var(--paper); color: var(--paper); }
+.lc-talk__pill--paper { background: var(--paper); color: var(--ink); }
+.lc-talk__pill--teal { background: var(--teal); color: var(--ink); }
+.lc-talk__pill--red { background: var(--red); color: var(--paper); }
+
+.lc-talk__hint {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  font-size: 13px;
+  color: var(--paper-56);
+}
+
+.lc-talk__phone {
+  display: grid;
+  gap: 20px;
+  padding: clamp(20px, 2.4vw, 32px);
+  border-radius: var(--radius-lg);
+  background: var(--ink);
+  box-shadow: 0 40px 80px rgb(0 0 0 / 0.25);
+}
+
+.lc-talk__bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--paper-12);
+}
+
+.lc-talk__bar > span:last-child {
+  display: grid;
+  line-height: 1.2;
+}
+
+.lc-talk__bar small {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--paper-56);
+}
+
+.lc-talk__bar small i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--teal);
+}
+
+.lc-talk__thread {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 360px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lc-bubble {
+  position: relative;
+  max-width: 82%;
+  padding: 12px 18px;
+  border-radius: 22px;
+  font-size: 16px;
+  line-height: 1.35;
+}
+
+.lc-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  width: 16px;
+  height: 12px;
+  background: inherit;
+}
+
+.lc-bubble--in {
+  align-self: flex-start;
+  background: var(--paper);
+  color: var(--ink);
+  transform-origin: 0 100%;
+}
+
+.lc-bubble--in::after {
+  left: 14px;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
+.lc-bubble--out {
+  align-self: flex-end;
+  background: var(--teal);
+  color: var(--ink);
+  transform-origin: 100% 100%;
+}
+
+.lc-bubble--out::after {
+  right: 14px;
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
+}
+
+.lc-bubble--typing {
+  display: inline-flex;
+  gap: 5px;
+  padding: 16px 18px;
+}
+
+.lc-bubble--typing i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.5;
+  animation: lc-dot 0.9s var(--ease-out) infinite;
+}
+
+.lc-bubble--typing i:nth-child(2) { animation-delay: 0.12s; }
+.lc-bubble--typing i:nth-child(3) { animation-delay: 0.24s; }
+
+.lc-talk__btn {
+  justify-self: start;
+}
+
+@media (max-width: 1100px) {
+  .lc-talk__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .lc-talk {
+    padding: 72px 0;
+    border-radius: var(--radius-lg);
+  }
+
+  .lc-talk__cloud {
+    height: 300px;
+  }
+
+  .lc-talk__pill--outline:first-child { left: 0 !important; }
+
+  .lc-talk__thread {
+    min-height: 330px;
+  }
+
+  .lc-hero__chip--like { left: 0; }
+  .lc-hero__chip--save { right: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lc-bubble--typing i { animation: none; }
 }
