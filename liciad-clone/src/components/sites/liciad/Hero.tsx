@@ -1,4 +1,5 @@
 import { A, contactHref, works } from "./data";
+import { UiChip } from "./Chips";
 import { Avatars, Btn, Parallax } from "./ui";
 
 const stack = [works[4], works[1], works[0]]; // back → front
@@ -76,6 +77,12 @@ export function Hero() {
               </a>
             ))}
             </Parallax>
+            <UiChip tone="red" icon="heart" tail rotate={-8} delay={1.1} className="lc-hero__chip lc-hero__chip--like">
+              1 248
+            </UiChip>
+            <UiChip tone="teal" icon="save" iconAfter rotate={6} delay={1.35} className="lc-hero__chip lc-hero__chip--save">
+              Uložiť
+            </UiChip>
           </div>
         </div>
       </div>
