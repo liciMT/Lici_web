@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, type ReactNode } from "react";
+import { animate, inView, motion, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
+import { useEffect, useRef, type ReactNode } from "react";
 import { A, avatars } from "./data";
 
 type BtnProps = {
@@ -14,9 +15,11 @@ type BtnProps = {
 /** Pill button with three animated brand dots (the signature interaction). */
 export function Btn({ href, children, variant = "ink", external, className }: BtnProps) {
   return (
-    <a
+    <motion.a
       href={href}
       className={`lc-btn lc-btn--${variant}${className ? ` ${className}` : ""}`}
+      whileTap={{ scale: 0.95 }}
+      transition={{ type: "spring", stiffness: 500, damping: 26 }}
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
     >
       <span>{children}</span>
@@ -25,7 +28,7 @@ export function Btn({ href, children, variant = "ink", external, className }: Bt
         <i />
         <i />
       </span>
-    </a>
+    </motion.a>
   );
 }
 
@@ -104,26 +107,46 @@ export function Logo({ dark = false }: { dark?: boolean }) {
  * Elements are visible by default (no-JS / reduced motion); the `.rv-ready`
  * class on <html> opts into the hidden starting state only once JS runs.
  */
+/**
+ * Scroll reveal powered by Framer Motion: every `[data-rv]` element springs up
+ * into place the first time it enters the viewport. `--d` (ms) staggers siblings.
+ * On the homepage it waits for the loading screen to melt away first.
+ */
 export function RevealObserver() {
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) return;
-    document.documentElement.classList.add("rv-ready");
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            e.target.classList.add("is-in");
-            io.unobserve(e.target);
-          }
-        });
-      },
-      { rootMargin: "0px 0px -8% 0px", threshold: 0.12 },
-    );
-    document.querySelectorAll("[data-rv]").forEach((el) => io.observe(el));
+    const root = document.documentElement;
+    root.classList.add("rv-ready");
+    const stops: VoidFunction[] = [];
+
+    const start = () => {
+      document.querySelectorAll<HTMLElement>("[data-rv]").forEach((el) => {
+        const stop = inView(
+          el,
+          () => {
+            const delay = parseFloat(getComputedStyle(el).getPropertyValue("--d")) / 1000 || 0;
+            animate(
+              el,
+              { opacity: [0, 1], translate: ["0px 28px", "0px 0px"] },
+              { opacity: { duration: 0.6, delay, ease: "easeOut" }, translate: { type: "spring", stiffness: 140, damping: 20, delay } },
+            ).then(() => el.classList.add("is-in"));
+          },
+          { margin: "0px 0px -8% 0px", amount: 0.12 },
+        );
+        stops.push(stop);
+      });
+    };
+
+    if (document.querySelector(".lc-loader")) {
+      window.addEventListener("lc:loaded", start, { once: true });
+    } else {
+      start();
+    }
     return () => {
-      io.disconnect();
-      document.documentElement.classList.remove("rv-ready");
+      window.removeEventListener("lc:loaded", start);
+      stops.forEach((s) => s());
+      root.classList.remove("rv-ready");
     };
   }, []);
   return null;
@@ -155,5 +178,33 @@ export function CMark({ className }: { className?: string }) {
       <path d="M0 166.948C0 100.702 49.0918 49.5691 117.108 49.5691C158.175 49.5691 194.75 70.4707 214.319 102.954L164.592 131.574C155.929 115.493 137.964 105.848 117.108 105.848C80.8539 105.848 57.1134 130.931 57.1134 166.951C57.1134 202.972 80.8539 228.051 117.108 228.051C137.964 228.051 155.929 218.403 164.592 202.004L214.319 230.946C194.75 263.426 158.496 284.33 117.108 284.33C49.0918 284.33 0 233.197 0 166.951V166.948Z" />
       <path d="M67.2359 51.0459C81.2294 45.7754 96.3492 43.1041 112.176 43.1041C123.056 43.1041 133.628 44.3347 143.791 46.7206C143.791 46.7206 160.78 42.2508 165.806 37.8434C179.688 25.668 181.702 7.99243 181.702 7.99243C181.702 7.99243 161.618 -2.30576 141.856 0.477182C125.273 2.8138 103.696 21.0145 103.696 21.0145C103.696 21.0145 91.0517 14.2344 70.2186 15.9245C49.3855 17.6146 32 34.9423 32 34.9423L54.6077 56.707C58.6544 54.6034 62.8519 52.6934 67.2326 51.0427L67.2359 51.0459Z" />
     </svg>
+  );
+}
+
+/**
+ * Scroll parallax (Framer Motion useScroll + useTransform + useSpring): the
+ * children drift `distance` px against the scroll while the block crosses the viewport.
+ */
+export function Parallax({
+  children,
+  distance = 80,
+  rotate = 0,
+  className,
+}: {
+  children: ReactNode;
+  distance?: number;
+  rotate?: number;
+  className?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const smooth = useSpring(scrollYProgress, { stiffness: 120, damping: 30, restDelta: 0.001 });
+  const y = useTransform(smooth, [0, 1], [distance, -distance]);
+  const r = useTransform(smooth, [0, 1], [-rotate, rotate]);
+  return (
+    <motion.div ref={ref} className={className} style={reduce ? undefined : { y, rotate: r }}>
+      {children}
+    </motion.div>
   );
 }

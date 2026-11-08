@@ -1,5 +1,5 @@
 import { A, contactHref, works } from "./data";
-import { Avatars, Btn, CMark } from "./ui";
+import { Avatars, Btn, Parallax } from "./ui";
 
 const stack = [works[4], works[1], works[0]]; // back → front
 
@@ -48,6 +48,7 @@ export function Hero() {
           </div>
 
           <div className="lc-hero__stack" data-rv style={{ ["--d" as string]: "200ms" }}>
+            <Parallax className="lc-hero__layer" distance={60} rotate={2}>
             {stack.map((w, i) => (
               <a
                 key={w.href}
@@ -74,26 +75,10 @@ export function Hero() {
                 )}
               </a>
             ))}
-            <RotatingBadge />
+            </Parallax>
           </div>
         </div>
       </div>
     </section>
-  );
-}
-
-function RotatingBadge() {
-  return (
-    <span className="lc-badge" aria-hidden="true">
-      <svg viewBox="0 0 120 120">
-        <defs>
-          <path id="lc-badge-path" d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1-92 0" />
-        </defs>
-        <text>
-          <textPath href="#lc-badge-path" textLength="286" lengthAdjust="spacing">WE TAKE IT PERSONALLY • LIČI AD • </textPath>
-        </text>
-      </svg>
-      <CMark className="lc-badge__core" />
-    </span>
   );
 }

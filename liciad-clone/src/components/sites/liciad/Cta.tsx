@@ -1,5 +1,5 @@
 import { contactHref, email } from "./data";
-import { Avatars, Btn, CMark } from "./ui";
+import { Avatars, Btn, CMark, Parallax } from "./ui";
 
 type CtaProps = {
   title?: string;
@@ -22,9 +22,11 @@ export function Cta({
             <h2 id="lc-cta-title" className="lc-cta__title">
               {title}
             </h2>
-            <span className="lc-cta__star" aria-hidden="true">
-              <CMark />
-            </span>
+            <Parallax distance={40} rotate={12}>
+              <span className="lc-cta__star" aria-hidden="true">
+                <CMark />
+              </span>
+            </Parallax>
           </div>
           <div className="lc-cta__bottom">
             <div className="lc-cta__people">

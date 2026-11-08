@@ -158,7 +158,7 @@
   white-space: nowrap;
   cursor: pointer;
   transition:
-    transform 0.35s var(--ease-spring),
+    translate 0.35s var(--ease-spring),
     background-color 0.25s ease,
     color 0.25s ease;
 }
@@ -201,12 +201,9 @@
   color: var(--ink);
 }
 
+/* Lift on hover via `translate`; the press squash is a Framer Motion spring (whileTap) on `transform`. */
 .lc-btn:hover {
-  transform: translateY(-2px);
-}
-
-.lc-btn:active {
-  transform: translateY(0) scale(0.98);
+  translate: 0 -2px;
 }
 
 .lc-btn__dots {
@@ -603,11 +600,6 @@
   line-height: 1.1;
 }
 
-.lc-menu.is-open li {
-  animation: lc-in 0.5s var(--ease-out) both;
-  animation-delay: calc(var(--i) * 50ms + 80ms);
-}
-
 .lc-menu__num {
   font-size: 14px;
   font-weight: 600;
@@ -838,43 +830,6 @@
   color: var(--paper-72);
 }
 
-.lc-badge {
-  position: absolute;
-  bottom: 2%;
-  left: 4%;
-  z-index: 3;
-  display: grid;
-  place-items: center;
-  width: 128px;
-  height: 128px;
-  border: 4px solid var(--paper);
-  border-radius: 50%;
-  background: var(--ink);
-  color: var(--paper);
-}
-
-.lc-badge > svg:first-child {
-  position: absolute;
-  inset: 4px;
-  width: calc(100% - 8px);
-  height: calc(100% - 8px);
-  animation: lc-spin 18s linear infinite;
-}
-
-.lc-badge text {
-  fill: currentColor;
-  font-size: 10.2px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-}
-
-.lc-badge__core {
-  width: 30px;
-  height: 40px;
-  color: var(--teal);
-  animation: lc-spin 18s linear infinite reverse;
-}
-
 @keyframes lc-spin {
   to {
     transform: rotate(360deg);
@@ -980,6 +935,28 @@
 .lc-story__words li.is-active sup {
   opacity: 1;
   color: var(--on-red);
+}
+
+/* Half-peeled lychee drawing tucked behind the video card. */
+.lc-story__visual {
+  position: relative;
+  isolation: isolate;
+}
+
+.lc-peel.lc-story__lici {
+  position: absolute;
+  /* Canvas 1.4x the card width; ~30 % of the drawing tucks behind the video. */
+  top: 50%;
+  left: -90%;
+  z-index: -1;
+  width: 140%;
+  max-width: none;
+  translate: 0 -50%;
+  /* Mirrored so the peeled side faces out, away from the card. */
+  scale: -1 1;
+  rotate: 14deg;
+  pointer-events: none;
+  user-select: none;
 }
 
 .lc-story__media {
@@ -1302,6 +1279,21 @@
 
 .lc-services__float .lc-tag {
   transform: rotate(-3deg);
+}
+
+/* Peeling lychee - scroll-scrubbed canvas (LiciPeel.tsx), white line art on teal. */
+.lc-peel {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+}
+
+.lc-services__peel {
+  width: min(118%, 440px, 42svh);
+  max-width: none;
+  margin: -24px 0 0 -28px;
+  rotate: -14deg;
 }
 
 .lc-services__big {
@@ -2208,17 +2200,10 @@ a.lc-svc:hover {
 /* =========================================================================
    Scroll reveal (only once JS opted in, never under reduced motion)
    ========================================================================= */
-.rv-ready [data-rv] {
+/* Hidden start state; Framer Motion (RevealObserver) springs each element in. */
+.rv-ready [data-rv]:not(.is-in) {
   opacity: 0;
-  translate: 0 18px;
-  transition:
-    opacity 0.8s var(--ease-out) var(--d, 0ms),
-    translate 0.8s var(--ease-out) var(--d, 0ms);
-}
-
-.rv-ready [data-rv].is-in {
-  opacity: 1;
-  translate: 0 0;
+  translate: 0 28px;
 }
 
 /* =========================================================================
@@ -2260,6 +2245,21 @@ a.lc-svc:hover {
   .lc-services__float {
     width: 100%;
     margin-bottom: 0;
+  }
+
+  .lc-services__big {
+    order: 1;
+  }
+
+  .lc-services__peel {
+    order: 2;
+    width: min(62%, 360px);
+    margin: -32px -16px -32px auto;
+  }
+
+  .lc-services__note {
+    order: 3;
+    width: 100%;
   }
 
   .lc-services__big {
@@ -2336,6 +2336,16 @@ a.lc-svc:hover {
   /* Tablet / phone: video spans the full content width, and the word list is sized
      so its longest word ("Motion design") matches that width - capped by
      viewport height so the whole sticky stage always fits on screen. */
+  .lc-story__visual {
+    order: -1;
+    width: 100%;
+  }
+
+  /* No room beside a full-width video - the drawing would collide with the counter. */
+  .lc-peel.lc-story__lici {
+    display: none;
+  }
+
   .lc-story__media {
     order: -1;
     width: 100%;
@@ -2484,16 +2494,6 @@ a.lc-svc:hover {
 
   .lc-hero__card--2 {
     left: 17%;
-  }
-
-  .lc-badge {
-    width: 100px;
-    height: 100px;
-    left: 0;
-  }
-
-  .lc-badge text {
-    font-size: 10.6px;
   }
 
   .lc-story__track {
@@ -3016,8 +3016,9 @@ a.lc-svc:hover {
   transition: transform 0.5s var(--ease-spring);
 }
 
+/* `translate`, not `transform`: Framer Motion owns transform for the entrance. */
 .lc-feat:hover {
-  transform: translateY(-6px);
+  translate: 0 -6px;
 }
 
 .lc-feat__media {
@@ -3363,8 +3364,6 @@ a.lc-svc:hover {
 .rv-ready .lc-perk[data-rv],
 .rv-ready .lc-feat[data-rv] {
   transition:
-    opacity 0.8s var(--ease-out) var(--d, 0ms),
-    translate 0.8s var(--ease-out) var(--d, 0ms),
     scale 0.7s var(--ease-out),
     rotate 0.7s var(--ease-out),
     transform 0.7s var(--ease-out),
@@ -3373,9 +3372,88 @@ a.lc-svc:hover {
 }
 
 /* Same smooth curve for the non-revealed state (no JS / reduced motion handled globally). */
-.lc-perk,
-.lc-feat {
+.lc-perk {
   transition:
     transform 0.7s var(--ease-out),
     box-shadow 0.7s var(--ease-out);
+}
+
+.lc-feat {
+  transition:
+    translate 0.7s var(--ease-out),
+    box-shadow 0.7s var(--ease-out);
+}
+
+/* =========================================================================
+   Homepage loader (Loader.tsx, Framer Motion): red screen, pale peeling
+   lychee + percentage, then the red melts down off the screen.
+   ========================================================================= */
+html.lc-loading {
+  overflow: hidden;
+}
+
+.lc-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  background: var(--red);
+  color: var(--paper);
+  clip-path: ellipse(160% 140% at 50% 100%);
+}
+
+.lc-loader__inner {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+}
+
+.lc-loader__lici {
+  width: min(62vw, 46svh, 420px);
+  aspect-ratio: 1;
+  rotate: -10deg;
+}
+
+.lc-loader__pct {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  font-size: clamp(56px, 9vw, 112px);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+}
+
+.lc-loader__pct small {
+  margin-top: 0.18em;
+  font-size: 0.32em;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.lc-loader__bar {
+  position: absolute;
+  inset: auto 0 0;
+  height: 6px;
+  background: var(--paper);
+  transform-origin: 0 50%;
+}
+
+/* Parallax layer inside the hero card stack (cards stay absolutely positioned within it). */
+.lc-hero__layer {
+  position: absolute;
+  inset: 0;
+}
+
+/* Scroll progress line under the header (ScrollProgress, Framer useScroll + useSpring). */
+.lc-progress {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 120;
+  height: 3px;
+  background: var(--red);
+  transform-origin: 0 50%;
+  pointer-events: none;
 }
