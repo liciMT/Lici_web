@@ -1,8 +1,16 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { A, contactHref, counters, heroSlides, introText, teamPhotos } from "./data";
-import { Btn, Marquee } from "./ui";
+import { LiciPeel } from "./LiciPeel";
+import {
+  A,
+  contactHref,
+  counters,
+  heroSlides,
+  introText,
+  teamPhotos,
+} from "./data";
+import { Btn, Marquee, Parallax } from "./ui";
 import { marqueeServices } from "./data";
 
 /**
@@ -43,7 +51,11 @@ export function Story() {
     <section className="lc-story" aria-labelledby="lc-story-title">
       <Marquee items={marqueeServices} tone="paper" />
 
-      <div className="lc-story__track" ref={trackRef} style={{ ["--n" as string]: count }}>
+      <div
+        className="lc-story__track"
+        ref={trackRef}
+        style={{ ["--n" as string]: count }}
+      >
         <div className="lc-story__stage">
           <div className="lc-wrap lc-story__wrap">
             <div className="lc-story__meta">
@@ -53,12 +65,20 @@ export function Story() {
             </div>
 
             <div className="lc-story__body">
-              <h2 id="lc-story-title" className="lc-sr">Čo robíme</h2>
+              <h2 id="lc-story-title" className="lc-sr">
+                Čo robíme
+              </h2>
               <ol className="lc-story__words">
                 {heroSlides.map((s, i) => (
                   <li
                     key={s.word}
-                    className={i === active ? "is-active" : i < active ? "is-past" : undefined}
+                    className={
+                      i === active
+                        ? "is-active"
+                        : i < active
+                          ? "is-past"
+                          : undefined
+                    }
                     aria-current={i === active || undefined}
                   >
                     {s.word}
@@ -66,21 +86,26 @@ export function Story() {
                   </li>
                 ))}
               </ol>
-              <div className="lc-story__media">
-                {heroSlides.map((s, i) => (
-                  <video
-                    key={s.word}
-                    className={i === active ? "is-active" : undefined}
-                    src={A(s.desktop)}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    preload={i === 0 ? "auto" : "metadata"}
-                    aria-hidden="true"
-                  />
-                ))}
-                <span className="lc-tag lc-tag--teal lc-story__tag">{heroSlides[active].word}</span>
+              <div className="lc-story__visual">
+                <LiciPeel className="lc-story__lici" mode="track" />
+                <div className="lc-story__media">
+                  {heroSlides.map((s, i) => (
+                    <video
+                      key={s.word}
+                      className={i === active ? "is-active" : undefined}
+                      src={A(s.desktop)}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      preload={i === 0 ? "auto" : "metadata"}
+                      aria-hidden="true"
+                    />
+                  ))}
+                  <span className="lc-tag lc-tag--teal lc-story__tag">
+                    {heroSlides[active].word}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -89,11 +114,24 @@ export function Story() {
 
       <div className="lc-wrap lc-story__intro">
         <figure className="lc-story__photo" data-rv>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={A(teamPhotos[0])} alt="Tím LIČI AD pri práci v kancelárii" loading="lazy" />
+          <Parallax className="lc-story__photo-in" distance={40}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={A(teamPhotos[0])}
+              alt="Tím LIČI AD pri práci v kancelárii"
+              loading="lazy"
+            />
+          </Parallax>
         </figure>
-        <div className="lc-story__text" data-rv style={{ ["--d" as string]: "120ms" }}>
-          <h3 className="lc-h2">Do každého projektu vkladáme <mark className="lc-hl lc-hl--teal">kus seba.</mark></h3>
+        <div
+          className="lc-story__text"
+          data-rv
+          style={{ ["--d" as string]: "120ms" }}
+        >
+          <h3 className="lc-h2">
+            Do každého projektu vkladáme{" "}
+            <mark className="lc-hl lc-hl--teal">kus seba.</mark>
+          </h3>
           <p>{introText}</p>
           <Btn href={contactHref} variant="paper">
             Pridajte sa k nám
@@ -104,7 +142,11 @@ export function Story() {
       <div className="lc-wrap">
         <ul className="lc-stats">
           {counters.map((c, i) => (
-            <li key={c.label} data-rv style={{ ["--d" as string]: `${i * 90}ms` }}>
+            <li
+              key={c.label}
+              data-rv
+              style={{ ["--d" as string]: `${i * 90}ms` }}
+            >
               <Counter to={c.to} decimals={c.decimals} suffix={c.suffix} />
               <strong>{c.label}</strong>
               <p>{c.text}</p>
@@ -116,7 +158,15 @@ export function Story() {
   );
 }
 
-function Counter({ to, decimals, suffix }: { to: number; decimals: number; suffix: string }) {
+function Counter({
+  to,
+  decimals,
+  suffix,
+}: {
+  to: number;
+  decimals: number;
+  suffix: string;
+}) {
   const ref = useRef<HTMLSpanElement | null>(null);
   const numRef = useRef<HTMLSpanElement | null>(null);
   const fmt = (v: number) => v.toFixed(decimals).replace(".", ",");
@@ -126,7 +176,12 @@ function Counter({ to, decimals, suffix }: { to: number; decimals: number; suffi
   useEffect(() => {
     const el = ref.current;
     const num = numRef.current;
-    if (!el || !num || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (
+      !el ||
+      !num ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    )
+      return;
     const format = (v: number) => v.toFixed(decimals).replace(".", ",");
     num.textContent = format(0);
     let raf = 0;
@@ -154,7 +209,12 @@ function Counter({ to, decimals, suffix }: { to: number; decimals: number; suffi
   }, [to, decimals]);
 
   return (
-    <span className="lc-stats__num" ref={ref} role="img" aria-label={`${fmt(to)}${suffix}`}>
+    <span
+      className="lc-stats__num"
+      ref={ref}
+      role="img"
+      aria-label={`${fmt(to)}${suffix}`}
+    >
       <span aria-hidden="true">
         <span ref={numRef}>{fmt(to)}</span>
         <em>{suffix}</em>

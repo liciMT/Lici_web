@@ -1,9 +1,20 @@
 "use client";
 
+import { motion, type Variants } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { contactHref, email, navItems, phone, type NavKey } from "./data";
 import { Btn, Logo } from "./ui";
+
+// Mobile menu links cascade in (and back out) with a Framer Motion stagger.
+const list: Variants = {
+  open: { transition: { staggerChildren: 0.06, delayChildren: 0.08 } },
+  closed: { transition: { staggerChildren: 0.03, staggerDirection: -1 } },
+};
+const item: Variants = {
+  open: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 260, damping: 24 } },
+  closed: { opacity: 0, y: 24, transition: { duration: 0.2 } },
+};
 
 export function Header({ current = "home" }: { current?: NavKey }) {
   const [scrolled, setScrolled] = useState(false);
@@ -63,16 +74,16 @@ export function Header({ current = "home" }: { current?: NavKey }) {
         </div>
       </header>
       <div id="lc-mobile-menu" className={`lc-menu${open ? " is-open" : ""}`} aria-hidden={!open} inert={!open}>
-        <ul>
-          {navItems.map((item, i) => (
-            <li key={item.label} style={{ ["--i" as string]: i }}>
-              <a href={item.href} onClick={() => setOpen(false)}>
+        <motion.ul variants={list} initial={false} animate={open ? "open" : "closed"}>
+          {navItems.map((nav, i) => (
+            <motion.li key={nav.label} variants={item}>
+              <a href={nav.href} onClick={() => setOpen(false)}>
                 <span className="lc-menu__num">0{i + 1}</span>
-                {item.label}
+                {nav.label}
               </a>
-            </li>
+            </motion.li>
           ))}
-        </ul>
+        </motion.ul>
         <div className="lc-menu__foot">
           <a href={`mailto:${email}`}>{email}</a>
           <a href={`tel:${phone.replace(/\s/g, "")}`}>{phone}</a>

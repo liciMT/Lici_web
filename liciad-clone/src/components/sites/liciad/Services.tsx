@@ -1,5 +1,6 @@
 import { Clapperboard, Fingerprint, Lightbulb, Megaphone, MonitorSmartphone, Printer, TrendingUp, type LucideIcon } from "lucide-react";
 import { SOURCE, contactHref, disciplines } from "./data";
+import { LiciPeel } from "./LiciPeel";
 import { Avatars, Btn } from "./ui";
 
 const icons: LucideIcon[] = [Fingerprint, Lightbulb, Megaphone, MonitorSmartphone, Clapperboard, Printer, TrendingUp];
@@ -22,6 +23,7 @@ export function Services() {
               <Avatars count={4} size="md" />
               <span className="lc-tag lc-tag--ink">Všetko pod jednou strechou</span>
             </div>
+            <LiciPeel className="lc-services__peel" />
             <p className="lc-services__big" aria-hidden="true">
               07
             </p>

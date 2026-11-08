@@ -11,7 +11,7 @@ import { Cta } from "@/components/sites/liciad/Cta";
 
 export default function Home() {
   return (
-    <Shell current="home">
+    <Shell current="home" loader>
       <Hero />
       <Story />
       <Works />

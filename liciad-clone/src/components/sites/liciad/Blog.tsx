@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence, motion } from "framer-motion";
 import { useMemo, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { A, blogCategories, blogPosts, type BlogPost } from "./data";
@@ -48,12 +49,23 @@ export function BlogList() {
 
         {featured && <FeaturedPost post={featured} key={featured.href} />}
 
+        {/* Framer Motion layout animation: filtering reflows the grid smoothly, cards fade/scale in and out. */}
         <ul className="lc-blog__grid" aria-live="polite">
-          {rest.map((p, i) => (
-            <li key={p.href} data-rv style={{ ["--d" as string]: `${(i % 3) * 80}ms` }}>
-              <PostCard post={p} />
-            </li>
-          ))}
+          <AnimatePresence mode="popLayout" initial={false}>
+            {rest.map((p, i) => (
+              <motion.li
+                key={p.href}
+                layout
+                initial={{ opacity: 0, y: 28, scale: 0.96 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, margin: "0px 0px -8% 0px" }}
+                exit={{ opacity: 0, scale: 0.92, transition: { duration: 0.2 } }}
+                transition={{ type: "spring", stiffness: 180, damping: 24, delay: (i % 3) * 0.06 }}
+              >
+                <PostCard post={p} />
+              </motion.li>
+            ))}
+          </AnimatePresence>
         </ul>
       </div>
     </section>
@@ -62,7 +74,14 @@ export function BlogList() {
 
 function FeaturedPost({ post }: { post: BlogPost }) {
   return (
-    <a href={post.href} className="lc-feat" data-rv>
+    <motion.a
+      href={post.href}
+      className="lc-feat"
+      initial={{ opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ type: "spring", stiffness: 140, damping: 22 }}
+    >
       <span className="lc-feat__media">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={A(post.image)} alt="" />
@@ -84,7 +103,7 @@ function FeaturedPost({ post }: { post: BlogPost }) {
           </span>
         </span>
       </span>
-    </a>
+    </motion.a>
   );
 }
 
