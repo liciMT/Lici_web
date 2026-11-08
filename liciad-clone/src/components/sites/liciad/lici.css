@@ -2135,16 +2135,26 @@ a.lc-svc:hover {
   color: var(--teal);
 }
 
-/* Giant wordmark: 90 % of the viewport width, anchored to the page bottom and
-   cropped slightly from below (container shows ~86 % of the logo height). */
+/* Giant row (90 % of the viewport): wordmark with service chips on the left,
+   the falling-lychee animation on the right. Everything sits on the page
+   bottom; the wordmark is cropped slightly from below (~86 % visible). */
 .lc-footer__giant {
-  position: relative;
+  display: grid;
+  grid-template-columns: 56fr 30fr;
+  justify-content: space-between;
+  align-items: end;
+  gap: 4vw;
   width: 90vw;
-  height: calc(90vw * 204 / 348 * 0.86);
-  margin-top: clamp(40px, 6vw, 80px);
+  margin-top: clamp(24px, 4vw, 56px);
   margin-left: 50%;
-  overflow: hidden;
   transform: translateX(-50%);
+}
+
+.lc-footer__logo {
+  grid-column: 1;
+  grid-row: 1;
+  aspect-ratio: 348 / 175.4; /* 86 % of the 348 x 204 mark */
+  overflow: hidden;
 }
 
 .lc-footer__word {
@@ -2154,12 +2164,44 @@ a.lc-svc:hover {
   color: var(--paper);
 }
 
+/* The pile rests on the same baseline as the cropped wordmark. */
+.lc-fall {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: end;
+  width: min(100%, 30vw);
+  position: relative;
+  aspect-ratio: 524 / 748;
+  margin-bottom: -2px;
+  pointer-events: none;
+}
+
+.lc-fall video,
+.lc-fall img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Chips float over the wordmark (same grid cell). */
+.lc-footer__chips {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: end;
+  aspect-ratio: 348 / 175.4;
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+
 .lc-footer__chip {
   position: absolute;
-  z-index: 1;
   padding: 0.6em 1.2em;
-  font-size: clamp(12px, 1.5vw, 22px);
+  font-size: clamp(11px, 1.4vw, 22px);
+  white-space: nowrap;
   box-shadow: 0 12px 30px -12px rgb(0 0 0 / 0.6);
+  pointer-events: auto;
 }
 
 .lc-footer__chip--1 {
@@ -2178,6 +2220,17 @@ a.lc-svc:hover {
   right: 3%;
   top: 52%;
   transform: rotate(-6deg);
+}
+
+@media (max-width: 760px) {
+  .lc-footer__giant {
+    grid-template-columns: 60fr 34fr;
+    gap: 3vw;
+  }
+
+  .lc-fall {
+    width: 100%;
+  }
 }
 
 .lc-footer__bottom {
